@@ -3,9 +3,10 @@ from torch import nn, Tensor
 import torch.nn.functional as F
 from typing import List, Optional, Dict, Union
 
-from .backbones import r3d_18, r2plus1d_18
+# from .backbones import r3d_18, r2plus1d_18
 from . import fusion
 from .utils import _init_params
+from .backbones import squeezenet
 
 
 class SMSV(nn.Module):
@@ -21,15 +22,14 @@ class SMSV(nn.Module):
         assert len(sources) == 1
         self.source = sources[0]
 
-        assert backbone in ["r3d_18", "r2plus1d_18"]
-        backbone = r3d_18 if backbone == "r3d_18" else r2plus1d_18
-        backbone = backbone(pretrained=pretrained, in_channels=1)
+        backbone = squeezenet 
+        self.backbone = backbone(pretrained=False, in_channels=1)
 
         self.stem = backbone.stem
-        self.layer1 = backbone.layer1
-        self.layer2 = backbone.layer2
-        self.layer3 = backbone.layer3
-        self.layer4 = backbone.layer4
+        # self.layer1 = backbone.layer1
+        # self.layer2 = backbone.layer2
+        # self.layer3 = backbone.layer3
+        # self.layer4 = backbone.layer4
 
         self.return_features = return_features
         if not self.return_features:
@@ -44,17 +44,18 @@ class SMSV(nn.Module):
             x = x[self.source]
 
         assert len(x.shape) == 5  # bs, c, t, h, w
+        x=self.backbone(x)
+        print(x.shape)
+        # x = self.stem(x)
+        # x = self.layer1(x)
+        # x = self.layer2(x)
+        # x = self.layer3(x)
+        # x = self.layer4(x)
 
-        x = self.stem(x)
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
-
-        if not self.return_features:
-            x = self.avg_pool(x)
-            x = self.flatten(x)
-            x = F.normalize(x, p=2, dim=1)
+        # if not self.return_features:
+        #     x = self.avg_pool(x)
+        #     x = self.flatten(x)
+        #     x = F.normalize(x, p=2, dim=1)
 
         return x
 
