@@ -3,7 +3,6 @@ from torch import nn, Tensor
 import torch.nn.functional as F
 from typing import List, Optional, Dict, Union
 
-# from .backbones import r3d_18, r2plus1d_18
 from . import fusion
 from .utils import _init_params
 from .backbones import squeezenet
@@ -13,8 +12,8 @@ class SMSV(nn.Module):
     def __init__(
         self,
         sources: List[str],
-        backbone: str = "r3d_18",
-        pretrained: bool = True,
+        backbone: str = "squeezenet",
+        pretrained: bool = False,
         return_features: bool = True,
     ) -> None:
         super().__init__()
