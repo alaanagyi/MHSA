@@ -25,10 +25,7 @@ class SMSV(nn.Module):
         self.backbone = backbone(pretrained=False, in_channels=1)
 
         self.stem = backbone.stem
-        # self.layer1 = backbone.layer1
-        # self.layer2 = backbone.layer2
-        # self.layer3 = backbone.layer3
-        # self.layer4 = backbone.layer4
+      
 
         self.return_features = return_features
         if not self.return_features:
@@ -45,16 +42,7 @@ class SMSV(nn.Module):
         assert len(x.shape) == 5  # bs, c, t, h, w
         x=self.backbone(x)
         print(x.shape)
-        # x = self.stem(x)
-        # x = self.layer1(x)
-        # x = self.layer2(x)
-        # x = self.layer3(x)
-        # x = self.layer4(x)
 
-        # if not self.return_features:
-        #     x = self.avg_pool(x)
-        #     x = self.flatten(x)
-        #     x = F.normalize(x, p=2, dim=1)
 
         return x
 
